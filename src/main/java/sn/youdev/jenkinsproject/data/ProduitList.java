@@ -12,7 +12,7 @@ import sn.youdev.jenkinsproject.entity.Produit;
 public class ProduitList {
 
     private List<Produit> products = new ArrayList<>();
-    private int id = 11;
+    private int id = 0;
     public ProduitList() {
         createProducts();
     }
@@ -28,6 +28,9 @@ public class ProduitList {
         products.add(new Produit(8, "DIB", "Dibi", 4500L, 1.5, "kg", 3.0));
         products.add(new Produit(9, "NGALAM", "Ngalakh", 1000L, 5.0, "pots", 10.0));
         products.add(new Produit(10, "MBOUR", "Thiebou Mboure", 3500L, 4.0, "kg", 8.0));
+        products.add(new Produit(11, "COFF", "Cafe Maxwell House", 3500L, 10.0, "boite", 8.0));
+        id = products.size();
+
     }
     public List<Produit> list (){
         return products;
