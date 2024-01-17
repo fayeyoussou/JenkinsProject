@@ -9,25 +9,28 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        stage('Test') {
+        stage('Build JDK 17 Image') {
             steps {
-                sh 'mvn test'
+                script {
+                    def jdkImage = docker.build('my-jdk-image:17', '-f Dockerfile.jdk17 .')
+                    jdkImage.inside {
+                        // You can add additional build steps inside the JDK image if needed
+                        sh 'java -version'
+                    }
+                }
             }
         }
-        // Uncomment and adapt the following stages as needed:
-//       stage('Deploy') {
-//           steps {
-//               sh '/Applications/Docker.app/Contents/Resources/bin/docker-compose/docker-compose up -d --build'
-//           }
-//       }
-//       stage('Push to Docker Hub') {
-//           steps {
-//               withCredentials([usernamePassword(credentialsId: 'dockerhub_credentials', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
-//                   sh "/Applications/Docker.app/Contents/Resources/bin/docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD"
-//                   sh "/Applications/Docker.app/Contents/Resources/bin/docker tag evalspringse:latest ngorseck/evalspringse:v$BUILD_NUMBER"
-//                   sh "/Applications/Docker.app/Contents/Resources/bin/docker push ngorseck/evalspringse:v$BUILD_NUMBER"
-//               }
-//           }
-//       }
+        stage('Deploy Spring Application') {
+            steps {
+                script {
+                    def springImage = docker.build('my-spring-app:latest', '-f Dockerfile.spring .')
+                    springImage.inside {
+                        // Your deployment steps here
+                        sh 'java -jar target/your-application.jar'
+                    }
+                }
+            }
+        }
     }
 }
+

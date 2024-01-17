@@ -1,0 +1,4 @@
+FROM my-jdk-image:17  # Reference the JDK 17 image you built earlier
+WORKDIR /app
+COPY target/jenkins-project.jar /app/
+CMD ["java", "-jar", "/app/jenkins-project.jar"]
